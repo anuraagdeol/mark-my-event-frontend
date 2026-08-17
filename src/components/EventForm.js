@@ -1,20 +1,34 @@
 import { useEffect, useState } from "react";
 
-function EventForm() {
+function EventForm(props) {
+  const { events, setEvents } = props;
   const [data, setData] = useState({
     title: "",
     date: "",
     organizer: "",
-    price: 0,
+    price: "",
     time: "",
     location: "",
     description: ""
   });
 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("DEBUG:: form submit - final data", data);
+    const response = await fetch('http://localhost:5000/submit-event', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+    if(response.ok) {
+      const newEventList = await fetch('http://localhost:5000');
+      const data = await newEventList.json();
+      setEvents(data);
+    } else {
+      alert('Something went wrong!');
+    }
   }
 
   return (
@@ -59,7 +73,7 @@ function EventForm() {
           placeholder="Event Organizer"
         />
         <input 
-          type="number"
+          type="text"
           value={data?.price}
           onChange={(e) => {
             setData((prevState) => {
@@ -72,7 +86,7 @@ function EventForm() {
           placeholder="Event Price"
         />
         <input 
-          type="time"
+          type="text"
           value={data?.time}
           onChange={(e) => {
             setData((prevState) => {
@@ -85,7 +99,7 @@ function EventForm() {
           placeholder="Event Time"
         />
         <input 
-          type="location"
+          type="text"
           value={data?.location}
           onChange={(e) => {
             setData((prevState) => {
