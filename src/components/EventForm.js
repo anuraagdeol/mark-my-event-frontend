@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import '../index.css';
 
 function EventForm(props) {
   const { events, setEvents } = props;
