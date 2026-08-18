@@ -15,51 +15,58 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* App is a fixed-height column: heading, then form, then the only
-   scrollable region (EventContainer) filling the rest of the space. */
+/* Grid layout: heading spans the top, form sits as a sidebar,
+   and the event list takes the main (larger) area and is the
+   only thing that scrolls. Grid-area placement means this works
+   regardless of the order elements appear in the JSX. */
 .App {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "heading heading"
+    "form    main";
+  column-gap: 28px;
   height: 100vh;
-  max-width: 640px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 32px 20px;
+  padding: 32px 24px;
   overflow: hidden;
 }
 
 /* ---------- Heading ---------- */
 .AppHeading {
-  flex: 0 0 auto;
-  margin: 0 0 24px;
-  text-align: center;
-  font-size: 40px;
+  grid-area: heading;
+  margin: 0 0 28px;
+  font-size: 32px;
   font-weight: 800;
-  letter-spacing: -1px;
+  letter-spacing: -0.5px;
   color: #1a1a1a;
 }
 
-/* ---------- Form ---------- */
+/* ---------- Form (sidebar) ---------- */
 .EventForm {
-  flex: 0 0 auto;
+  grid-area: form;
+  align-self: start;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   background: #fff;
   border: 1px solid #eaeaea;
   border-radius: 12px;
-  padding: 28px;
-  margin-bottom: 24px;
+  padding: 22px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 .EventForm input {
-  padding: 10px 12px;
-  font-size: 15px;
+  padding: 9px 11px;
+  font-size: 14px;
   border: 1px solid #ddd;
   border-radius: 8px;
   background: #fdfdfd;
   color: #222;
   outline: none;
+  width: 100%;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
@@ -73,10 +80,9 @@ body {
 }
 
 .EventForm button {
-  align-self: flex-start;
   margin-top: 4px;
-  padding: 10px 22px;
-  font-size: 15px;
+  padding: 10px 18px;
+  font-size: 14px;
   font-weight: 500;
   color: #fff;
   background: #222;
@@ -90,17 +96,16 @@ body {
   background: #000;
 }
 
-/* ---------- Event list: the only scrollable element ---------- */
+/* ---------- Event list (main, scrollable) ---------- */
 .EventContainer {
-  flex: 1 1 auto;
+  grid-area: main;
   min-height: 0;
   overflow-y: auto;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  align-content: start;
   gap: 16px;
   padding-right: 4px;
-  border: 1px solid #eaeaea;
-  border-radius: 12px;
 }
 
 .EventContainer::-webkit-scrollbar {
@@ -120,7 +125,7 @@ body {
   background: #fff;
   border: 1px solid #eaeaea;
   border-radius: 12px;
-  padding: 20px 24px;
+  padding: 20px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
@@ -131,7 +136,7 @@ body {
 }
 
 .EventContainer hr {
-  display: none; /* card border/spacing replaces the divider */
+  display: none;
 }
 
 .EventContainer button {
@@ -152,9 +157,21 @@ body {
 }
 
 .EventContainer > span {
-  display: block;
+  grid-column: 1 / -1;
   text-align: center;
   color: #999;
-  padding: 40px 0;
+  padding: 60px 0;
   font-size: 14px;
+}
+
+/* Stack into a single column on narrower screens */
+@media (max-width: 720px) {
+  .App {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas:
+      "heading"
+      "form"
+      "main";
+  }
 }

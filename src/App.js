@@ -7,7 +7,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1 className="AppHeading">Mark My Event</h1>
+      <h1 className="AppHeading">Mark my event</h1>
       <EventForm events={events} setEvents={setEvents} />
       <EventContainer events={events} setEvents={setEvents} />
     </div>
